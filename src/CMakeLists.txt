@@ -104,16 +104,18 @@ if (Boost_FOUND AND OpenCV_FOUND AND Protobuf_FOUND AND TARGET libParameters AND
             VideoSet.cpp
             Executor.cpp)
     if(TARGET libYOLODet)
-        target_link_libraries(libSolais
-                ${libYOLODet}
+            target_link_libraries(
+		libSolais
+                libYOLODet
                 )
     endif()
-    if(DEFINED Support_RK3588)
-        target_link_libraries(libSolais
-                ${libRGA}
-                ${libRKNNRT}
+        if(DEFINED Support_RK3588)
+            target_link_libraries(
+		libSolais
+		libRGA
+	    	libRKNNRT
                 )
-    endif()
+        endif()
     target_link_libraries(libSolais
             ${OpenCV_LIBRARIES}
             ${Boost_FILESYSTEM_LIBRARY}
