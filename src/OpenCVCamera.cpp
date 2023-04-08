@@ -42,6 +42,20 @@ void OpenCVCamera::readFrameFromCamera(const package::ParamSet &params) {
     #else
     cap.open(params.camera_id(), cv::CAP_V4L2);
     #endif
+    cap.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
+    // Added by tz61, using MJPG to raise the capture fps, (not MPEG)
+    // using this command to check supported formats:
+    // eg:
+    //9:20:13 ztn@ztn-laptop2 Meta-Vision-SolaisNG ±|main ✗|→ v4l2-ctl --list-formats-ext
+    //ioctl: VIDIOC_ENUM_FMT
+    //        Type: Video Capture
+    //
+    //        [0]: 'MJPG' (Motion-JPEG, compressed)
+    //                Size: Discrete 1600x1200
+    //                        Interval: Discrete 0.033s (30.000 fps)
+    //                        Interval: Discrete 0.200s (5.000 fps)
+    //                        Interval: Discrete 0.033s (30.000 fps)
+    //                        Interval: Discrete 0.200s (5.000 fps)
     if (!cap.isOpened()) {
         capInfoSS << "Failed to open camera " << params.camera_id() << "\n";
         std::cerr << capInfoSS.rdbuf();
@@ -100,6 +114,9 @@ void OpenCVCamera::readFrameFromCamera(const package::ParamSet &params) {
               << "Auto Exposure: " << cap.get(cv::CAP_PROP_AUTO_EXPOSURE) << "\n"
               << "Exposure: " << cap.get(cv::CAP_PROP_EXPOSURE) << "\n";
     std::cout << capInfoSS.rdbuf();
+    if (params.fps() != cap.get(cv::CAP_PROP_FPS)){
+        std::cerr<<"[WARNING]FPS to set is "<<params.fps()<<", but the actual fps set is "<<cap.get(cv::CAP_PROP_FPS)<<std::endl;
+    }
 
     while (true) {
 

@@ -61,7 +61,7 @@ void Executor::applyParams(const ParamSet &p) {
 
     // Input of ImageSet
     if (imageSet_->isOpened()) {
-        stop();
+        this->stop();
         imageSet_->close();
     }
 
@@ -111,7 +111,7 @@ void Executor::stop() {
 }
 
 bool Executor::startRealTimeDetection() {
-    if (th) stop();
+    if (th) this->stop();
 
     if (!camera_) return false;
     if (!camera_->isOpened()) {
@@ -128,7 +128,7 @@ bool Executor::startRealTimeDetection() {
 }
 
 bool Executor::startImageSetDetection() {
-    if (th) stop();
+    if (th) this->stop();
 
     if (imageSet_->isOpened()) imageSet_->close();  // always restart
     if (!imageSet_->openCurrentImageSet(params)) return false;
@@ -141,7 +141,7 @@ bool Executor::startImageSetDetection() {
 }
 
 bool Executor::startSingleImageDetection(const std::string &imageName) {
-    if (th) stop();
+    if (th) this->stop();
 
     if (imageSet_->isOpened()) imageSet_->close();
     if (!imageSet_->openSingleImage(imageName, params)) return false;
@@ -153,7 +153,7 @@ bool Executor::startSingleImageDetection(const std::string &imageName) {
 }
 
 bool Executor::startVideoDetection(const std::string &videoName) {
-    if (th) stop();
+    if (th) this->stop();
 
     if (videoSet_->isOpened()) videoSet_->close();
     if (!videoSet_->openVideo(videoName, params)) return false;
@@ -191,7 +191,7 @@ void Executor::runStreamingDetection(InputSource *source) {
 
 
         // Run armor detection algorithm
-        // For the compile on no CUDA supported platforms
+        // For the compilation on no CUDA supported platforms
 #ifdef CUDAToolkit_FOUND
         std::vector<ArmorDetector::DetectedArmor> detectedArmors = detector_->detect_NG(img);
 #else
