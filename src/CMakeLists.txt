@@ -53,7 +53,7 @@ if (OpenCV_FOUND AND CUDAToolkit_FOUND)
     target_link_libraries(libYOLODet ${OpenCV_LIBRARIES} nvinfer cudart fmt::fmt "stdc++fs" nvonnxparser cuda)
 #    target_include_directories(libYOLODet INTERFACE include)
 else()
-    message("=> Target libNanoDet is not available to build. Depends: OpenCV")
+    message("=> Target libYOLODet is not available to build. Depends: OpenCV and CUDAToolkit")
 endif()
 
 # libArmorSolver
@@ -104,9 +104,15 @@ if (Boost_FOUND AND OpenCV_FOUND AND Protobuf_FOUND AND TARGET libParameters AND
             VideoSet.cpp
             Executor.cpp)
     if(TARGET libYOLODet)
-        list(INSERT SolaisNNLibs 0 
-            libYOLODet
-        )
+        target_link_libraries(libSolais
+                ${libYOLODet}
+                )
+    endif()
+    if(DEFINED Support_RK3588)
+        target_link_libraries(libSolais
+                ${libRGA}
+                ${libRKNNRT}
+                )
     endif()
     target_link_libraries(libSolais
             ${OpenCV_LIBRARIES}
@@ -119,7 +125,6 @@ if (Boost_FOUND AND OpenCV_FOUND AND Protobuf_FOUND AND TARGET libParameters AND
             libSerial
             libArmorSolver
             libCamera
-            ${SolaisNNLibs}
             )
     target_compile_definitions(libSolais PUBLIC "$<$<CONFIG:DEBUG>:DEBUG>")
 
@@ -151,5 +156,5 @@ if (OpenCV_FOUND AND CUDAToolkit_FOUND)
     target_link_libraries(libNanoDet ${OpenCV_LIBRARIES} nvinfer cudart)
     target_include_directories(libNanoDet INTERFACE include)
 else()
-    message("=> Target libNanoDet is not available to build. Depends: OpenCV")
+    message("=> Target libNanoDet is not available to build. Depends: OpenCV and CUDAToolkit")
 endif()

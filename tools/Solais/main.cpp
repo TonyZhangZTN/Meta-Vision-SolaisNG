@@ -14,6 +14,7 @@
 #include <opencv2/core/cuda.hpp>
 
 using namespace meta;
+// package is the protobuf namespace
 using namespace package;
 
 /** TCP IO **/

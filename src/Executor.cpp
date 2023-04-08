@@ -191,8 +191,12 @@ void Executor::runStreamingDetection(InputSource *source) {
 
 
         // Run armor detection algorithm
+
         // For the compilation on no CUDA supported platforms
-#ifdef CUDAToolkit_FOUND
+#ifdef Enable_RKNN
+        //std::vector<ArmorDetector::DetectedArmor> detectedArmors = detector_->detect_rknn(img);
+#endif
+#ifdef ON_JETSON
         std::vector<ArmorDetector::DetectedArmor> detectedArmors = detector_->detect_NG(img);
 #else
         std::vector<ArmorDetector::DetectedArmor> detectedArmors = detector_->detect(img);

@@ -1,0 +1,12 @@
+add_library(
+        libRGA
+        SHARED
+        IMPORTED
+        ${CMAKE_SOURCE_DIR}/3rdparty/rga/RK3588/lib/Linux/aarch64/librga.so
+)
+add_library(
+        libRKNNRT
+        SHARED
+        IMPORTED
+        ${CMAKE_SOURCE_DIR}/RK3588/Linux/librknn_api/aarch64/librknnrt.so
+)

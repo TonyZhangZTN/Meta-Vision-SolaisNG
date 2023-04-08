@@ -60,6 +60,7 @@ endif ()
 # Find TensorRT and CUDA
 find_package(CUDAToolkit)
 if (CUDAToolkit_FOUND)
+    add_compile_definitions(ON_JETSON)
     enable_language(CUDA)
     include_directories(${CUDAToolkit_INCLUDE_DIRS})
     link_directories(${CUDAToolkit_LIBRARY_DIR})
@@ -67,7 +68,15 @@ if (CUDAToolkit_FOUND)
 else ()
     message(WARNING "CUDA and TensorRT not found so some targets may not be available")
 endif()
-
+if(DEFINED Support_RK3588)
+    add_compile_definitions(Enable_RKNN)
+    include_directories(
+            ${CMAKE_SOURCE_DIR}/lib/rknpu/3rdparty/rga/RK3588/include
+            ${CMAKE_SOURCE_DIR}/lib/rknpu/RK3588/Linux/librknn_api/include
+    )
+else ()
+    message(WARNING "Not enabling RK3588 support")
+endif()
 # Find GStreamer
 find_package(PkgConfig)
 if (PkgConfig_FOUND)
